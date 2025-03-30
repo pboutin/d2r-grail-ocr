@@ -1,0 +1,22 @@
+{
+  "name": "d2r-grail-ocr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pboutin/d2r-grail-ocr.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pboutin/d2r-grail-ocr/issues"
+  },
+  "homepage": "https://github.com/pboutin/d2r-grail-ocr#readme",
+  "devDependencies": {
+    "node-ts": "^8.0.2"
+  }
+}
