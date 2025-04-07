@@ -1,14 +1,15 @@
 import * as cheerio from "cheerio";
 import fs from "fs";
 
-import { Item } from "./types";
-import { downloadItemImage, resolveItemRarity } from "./utilities";
+import { Item, ItemType } from "../src/types";
+import { downloadItemImage, resolveItemType } from "./utilities";
 import { resolveItemRank } from "./utilities";
 
 const WEBSITE_SECTIONS: Array<{
   uri: string;
   descriptionMustContain?: string;
   descriptionCantContain?: string;
+  hardcodedType?: ItemType;
 }> = [
   {
     uri: "uniques",
@@ -20,6 +21,7 @@ const WEBSITE_SECTIONS: Array<{
   {
     uri: "misc/#filter=Rune",
     descriptionMustContain: "Rune",
+    hardcodedType: ItemType.RUNE,
   },
 ];
 
@@ -55,20 +57,24 @@ const WEBSITE_SECTIONS: Array<{
       const imagePath = await downloadItemImage(
         $htmlItem
           .find("a > div[data-background-image]")
-          .data("background-image") as string
+          .data("background-image") as string,
+        false // Updated images: april 2025
       );
 
       items.push({
         id,
         name,
         rank: resolveItemRank(description),
-        rarity: resolveItemRarity(description),
+        type: section.hardcodedType ?? resolveItemType(description),
         imagePath,
       });
     }
   }
 
-  fs.writeFileSync("./items.json", JSON.stringify(items, null, 2));
+  fs.writeFileSync(
+    "./src/items.ts",
+    `export default ${JSON.stringify(items, null, 2)}`
+  );
 
   console.log("Donezo !");
 })();

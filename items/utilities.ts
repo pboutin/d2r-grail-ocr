@@ -1,13 +1,13 @@
-import { ItemRank, ItemRarity } from "./types";
+import { ItemRank, ItemType } from "../src/types";
 import { writeFile } from "fs/promises";
 
-export const resolveItemRarity = (input: string): ItemRarity | null => {
+export const resolveItemType = (input: string): ItemType | null => {
   if (input.includes("Unique")) {
-    return ItemRarity.UNIQUE;
+    return ItemType.UNIQUE;
   } else if (input.includes("Set")) {
-    return ItemRarity.SET;
+    return ItemType.SET;
   } else if (input.includes("Rare")) {
-    return ItemRarity.RARE;
+    return ItemType.RARE;
   }
 
   return null;
@@ -26,12 +26,17 @@ export const resolveItemRank = (input: string): ItemRank | null => {
 };
 
 export const downloadItemImage = async (
-  relativeImagePath: string
+  relativeImagePath: string,
+  doDownload = true
 ): Promise<string> => {
   const ITEM_IMAGE_BASE_URL =
     "https://diablo2.io/styles/zulu/theme/images/items/";
 
   const fileName = relativeImagePath.split("/").pop()!;
+
+  if (!doDownload) {
+    return fileName;
+  }
 
   const response = await fetch(`${ITEM_IMAGE_BASE_URL}${fileName}`);
   if (!response.body) {

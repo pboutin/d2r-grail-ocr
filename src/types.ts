@@ -4,16 +4,17 @@ export enum ItemRank {
   ELITE = "elite",
 }
 
-export enum ItemRarity {
+export enum ItemType {
   UNIQUE = "unique",
   SET = "set",
   RARE = "rare",
+  RUNE = "rune",
 }
 
 export interface Item {
   id: string;
   name: string;
   rank: ItemRank | null;
-  rarity: ItemRarity | null;
+  type: ItemType | null;
   imagePath: string;
 }

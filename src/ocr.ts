@@ -1,9 +1,21 @@
 import { desktopCapturer } from "electron";
 import fs from "fs";
+import { Item, ItemType } from "./types";
+import items from "./items";
 import { createWorker } from "tesseract.js";
 
 const TMP_DIR = "./ocr-tmp";
 const SCREENSHOT_SIZE = 2000;
+const CLEANUP_REGEX = /[ ']/g;
+
+const SEARCH_ITEMS: Array<[Item, RegExp]> = (items as Item[]).map((item) => [
+  item,
+  new RegExp(
+    item.name.replace(CLEANUP_REGEX, "") +
+      (item.type === ItemType.RUNE ? "(rune|.{0,5}\\d+)" : ""),
+    "i"
+  ),
+]);
 
 const ocr = async () => {
   console.info("Initiate OCR");
@@ -26,8 +38,25 @@ const ocr = async () => {
     workerPath: "./node_modules/tesseract.js/src/worker-script/node/index.js",
   });
   const ret = await worker.recognize(`${TMP_DIR}/screenshot.png`);
-  console.log(ret.data.text);
   await worker.terminate();
+
+  const cleanedText = ret.data.text.replace(CLEANUP_REGEX, "");
+
+  const foundItems: Item[] = [];
+
+  for (const [item, regex] of SEARCH_ITEMS) {
+    const match = cleanedText.match(regex);
+
+    if (match) {
+      console.log("Found ", item.name, "with match", ...match);
+      foundItems.push(item);
+    }
+  }
+
+  if (foundItems.length === 0) {
+    console.log("No matches found");
+    console.warn(cleanedText);
+  }
 
   console.info("\nOCR finished");
   console.timeEnd("OCR");
