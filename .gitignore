@@ -93,3 +93,4 @@ out/
 
 # OCR
 ocr-tmp/
+database.db

@@ -9,7 +9,8 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts,.tsx ."
+    "lint": "eslint --ext .ts,.tsx .",
+    "rebuild-sqlite3": "electron-rebuild -f -w sqlite3"
   },
   "keywords": [],
   "author": {
@@ -31,6 +32,7 @@
     "@typescript-eslint/parser": "^5.62.0",
     "cheerio": "^1.0.0",
     "electron": "35.1.2",
+    "electron-rebuild": "^3.2.9",
     "eslint": "^8.57.1",
     "eslint-plugin-import": "^2.31.0",
     "graceful-fs": "^4.2.11",
@@ -41,6 +43,7 @@
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.1",
+    "sqlite3": "^5.1.7",
     "tesseract.js": "^6.0.0"
   }
 }

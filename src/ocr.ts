@@ -3,6 +3,7 @@ import fs from "fs";
 import { Item, ItemType } from "./types";
 import items from "./items";
 import { createWorker } from "tesseract.js";
+import database from "./database";
 
 const TMP_DIR = "./ocr-tmp";
 const SCREENSHOT_SIZE = 2000;
@@ -56,6 +57,19 @@ const ocr = async () => {
   if (foundItems.length === 0) {
     console.log("No matches found");
     console.warn(cleanedText);
+  } else if (foundItems.length === 1) {
+    database.run(
+      "INSERT INTO loots(itemId, itemName, foundAt) VALUES(?, ?, ?)",
+      [foundItems[0].id, foundItems[0].name, new Date().toISOString()],
+      function (error) {
+        if (error) {
+          return console.log(error.message);
+        }
+        console.log("Row was added to the table: ${this.lastID}");
+      }
+    );
+  } else {
+    console.log("Ambiguous matches found, skipping database update");
   }
 
   console.info("\nOCR finished");
