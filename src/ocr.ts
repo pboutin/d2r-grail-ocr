@@ -9,14 +9,16 @@ const TMP_DIR = "./ocr-tmp";
 const SCREENSHOT_SIZE = 2000;
 const CLEANUP_REGEX = /[ ']/g;
 
-const SEARCH_ITEMS: Array<[Item, RegExp]> = (items as Item[]).map((item) => [
-  item,
-  new RegExp(
-    item.name.replace(CLEANUP_REGEX, "") +
-      (item.type === ItemType.RUNE ? "(rune|.{0,5}\\d+)" : ""),
-    "i"
-  ),
-]);
+const SEARCH_ITEMS: Array<[Item, RegExp]> = (items as Item[])
+  .filter(({type}) => type !== ItemType.RUNE) // Temp. disabling since it conflicts too much
+  .map((item) => [
+    item,
+    new RegExp(
+      item.name.replace(CLEANUP_REGEX, "") +
+        (item.type === ItemType.RUNE ? "(rune|.{0,5}\\d+)" : ""),
+      "i"
+    ),
+  ]);
 
 const ocr = async () => {
   console.info("Initiate OCR");
@@ -24,7 +26,8 @@ const ocr = async () => {
 
   const sources = await desktopCapturer.getSources({
     types: ["screen"],
-    thumbnailSize: { height: SCREENSHOT_SIZE, width: SCREENSHOT_SIZE },
+    // TODO: Finding the user's screen size dynamically
+    thumbnailSize: { height: 2160 , width: 3840  }, // 4K resolution
   });
 
   if (fs.existsSync(TMP_DIR)) {
@@ -65,7 +68,7 @@ const ocr = async () => {
         if (error) {
           return console.log(error.message);
         }
-        console.log("Row was added to the table: ${this.lastID}");
+        console.log(`Row was added to the table: ${this.lastID}`);
       }
     );
   } else {

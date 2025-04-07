@@ -41,7 +41,7 @@ app.on("window-all-closed", () => {
 app.commandLine.appendSwitch("enable-features", "GlobalShortcutsPortal");
 
 app.whenReady().then(() => {
-  const ret = globalShortcut.register("F12", () => {
+  const ret = globalShortcut.register("CommandOrControl+F12", () => {
     ocr();
   });
 
