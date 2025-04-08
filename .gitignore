@@ -93,4 +93,7 @@ out/
 
 # OCR
 ocr-tmp/
+ocr-tests/results/*.txt
+
+# Database
 database.db
