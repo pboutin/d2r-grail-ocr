@@ -114,6 +114,6 @@ export default async () => {
     console.log("Ambiguous matches found, skipping database update");
   }
 
-  console.info("\nOCR finished");
-  console.timeEnd("OCR\n");
+  console.timeEnd("OCR");
+  console.info("\nOCR finished\n");
 };
